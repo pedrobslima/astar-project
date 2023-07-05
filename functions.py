@@ -42,8 +42,18 @@ def quicksort(A: list, l: int, r: int):
     if(l < r):
         # s = split position
         s, A = partition(A, l, r)
-        return quicksort(A, l, s-1) + A[s] + quicksort(A, s+1, r)
+        return quicksort(A, l, s-1) + A[s:s+1] + quicksort(A, s+1, r)
     return A
+
+def printFrontier(t: Tree, gen: int):
+    print(f'{gen}a:', end='')
+    '''for state in t.frontier:
+        print(state)
+        print(f' [{state.station.name}, {state.station.line}, {state.g}+{state.h}={state.f}]')
+    '''
+    print(t.frontier)
+    print('_'*20)
+    return gen+1
 
 # 30km/h => 0,5km/min
 

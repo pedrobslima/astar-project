@@ -39,33 +39,37 @@ while(not(origin in metro.getNames() and dest in metro.getNames())):
     print('\n')
 
 EXbl = Node(origin, 'blank')
-x = dist_direct[int(origin[1:])-1][int(dest[1:])-1] # mudar nome
+idx_dest = int(dest[1:])-1
+x = dist_direct[int(origin[1:])-1][idx_dest] # mudar nome
 
 s0 = State(EXbl, 0, x, [])
 
 metro.frontier.append(s0)
 
+count = 1
 while(True):
+    count = printFrontier(metro, count)
     # nova geração:
     new_gen = []
     sum_weight = 0
     best = metro.frontier[0]
 
-    if(best.station.name == dest): break
-    
+    if(best.station.name == dest or count > 9): break
+    # tá dando erro por aqui ó vvv
     for j in range(14):
         g_temp = dist_real[best.station.idx()][j]
         if(g_temp > 0):
             sum_weight = best.g + g_temp
-            new_station = getThing(best.station, j)
+            new_station = getThing(best.station, j, metro)
             if(new_station.line != best.station.line):
                 sum_weight += 4
-            history = best.previous + best.station.name
-            new_state = State(new_station, sum_weight, dist_direct[best.station.idx()][j], history)
+            history = best.previous + [best.station.name]
+            new_state = State(new_station, sum_weight, dist_direct[best.station.idx()][idx_dest], history)
+            print(new_state)
             new_gen.append(new_state)
     
     # atualização fronteira:
-    metro.frontier = new_state + metro.frontier[1:]
+    metro.frontier = new_gen + metro.frontier[1:]
     metro.frontier = quicksort(metro.frontier, 0, len(metro.frontier)-1)
 
 # printar caminho
