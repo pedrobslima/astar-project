@@ -1,6 +1,8 @@
 from dicts import *
 from classes import *
 
+# Para pegar a linha específica da estação seguinte:
+#(é usado para saber se vai precisar trocar de linha ou não)
 def getThing(nodeA: Node, indexB: int, t: Tree): # mudar nome
     global lines
     nameA = nodeA.name
@@ -13,6 +15,8 @@ def getThing(nodeA: Node, indexB: int, t: Tree): # mudar nome
     
     return t.getStation(nameB, color)
 
+# Coisas de quicksort para a ordenação da fronteira:
+#----------------------------------------------------
 def partition(A: list, l: int, r: int):
     tam = r - l
     if(tam > 0):
@@ -45,6 +49,9 @@ def quicksort(A: list, l: int, r: int):
         return quicksort(A, l, s-1) + A[s:s+1] + quicksort(A, s+1, r)
     return A
 
+#----------------------------------------------------
+
+# Função para printar a fonteira(ajuda em testes):
 def printFrontier(t: Tree, gen: int):
     print(f'{gen}a:', end='')
     '''for state in t.frontier:
@@ -54,6 +61,9 @@ def printFrontier(t: Tree, gen: int):
     print(t.frontier)
     print('_'*20)
     return gen+1
+
+# Conversão de distância para tempo,
+# não sei se uso ou não:
 
 # 30km/h => 0,5km/min
 
