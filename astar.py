@@ -66,6 +66,7 @@ while(metro.frontier[0].station.name != dest):
                 sum_weight += 4                        # linhas forem diferentes
             history = best.previous + [best.station.name] # 5) Cria o histórico de estações do novo estado
             # v 6) Cria o novo estado:
+            if(count == 32): print(new_station.name, new_station.line, new_station.idx)
             new_state = State(new_station, sum_weight, dist_direct[new_station.idx][idx_dest], history)
             print(new_state) # para testes [tirar na versão final]
             new_gen.append(new_state) # 7) Adiciona o novo estado na lista da nova geração
@@ -74,7 +75,6 @@ while(metro.frontier[0].station.name != dest):
     # 1) Adiciona a nova geração à fronteira:
     metro.frontier = new_gen + metro.frontier[1:]
     # 2) Ordena a fronteira de menor para maior, baseado na função f(n) de cada estado:
-                    #vvvvvvvvv (o problema está aqui)
     metro.frontier = quicksort(metro.frontier, 0, len(metro.frontier)-1)
 
 if(count < LIMITE): #(se tiver dado um loop infinito não tem pq botar caminho)
