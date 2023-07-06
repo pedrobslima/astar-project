@@ -45,7 +45,7 @@ s0 = State(Node(origin, 'blank'), 0, h_og, []) # estado inicial
 metro.frontier.append(s0) # adicionando à fronteira
 
 count = 1 # contador de emergência [lembrar de tirar na versão final]
-LIMITE = 20 # limite de emergência [lembrar de tirar na versão final]
+LIMITE = 200 # limite de emergência [lembrar de tirar na versão final]
 print(metro.frontier[0].station.name == dest)
 while(metro.frontier[0].station.name != dest):
     count = printFrontier(metro, count) # para testes [tirar na versão final]
@@ -80,11 +80,11 @@ while(metro.frontier[0].station.name != dest):
 if(count < LIMITE): #(se tiver dado um loop infinito não tem pq botar caminho)
     # PRINTAR CAMINHO:
     print('CAMINHO:')
-    for i in range(len(best.previous)):
-        print(best.previous[i], ' -> ', end='')
-    print(f'''{best.station.name}
+    for i in range(len(metro.frontier[0].previous)):
+        print(metro.frontier[0].previous[i], ' -> ', end='')
+    print(f'''{metro.frontier[0].station.name}
 
-Tempo total: {best.f}''')
+Tempo total: {metro.frontier[0].f}''')
 else:
     # Aviso de loop infinito:
     print('\nloop infinito :(\n')
