@@ -19,9 +19,9 @@ class State:
 
 # Tree representa a árvore completa
 class Tree:
-    def __init__(self):
+    def __init__(self, conections: tuple):
         self.stations = [] # lista de Nodes
-        self.conect: tuple # dist_direct (tirar dps?)
+        self.conect = conections # dist_direct
         self.frontier = [] # fronteira atual
     
     # Para adicionar nós à árvore:

@@ -3,7 +3,7 @@ from classes import *
 
 # Para pegar a linha específica da estação seguinte:
 #(é usado para saber se vai precisar trocar de linha ou não)
-def getThing(nodeA: Node, indexB: int, t: Tree): # mudar nome
+def StationByIdx(nodeA: Node, indexB: int, t: Tree):
     global lines
     nameA = nodeA.name
     nameB = 'E' + str(indexB + 1)
@@ -55,29 +55,30 @@ def quicksort(A: list, l: int, r: int):
 
 #----------------------------------------------------
 
-# Função para printar a fonteira(ajuda em testes):
-def printFrontier(t: Tree, gen: int):
-    print(f'{gen}a:', end='')
-    '''for state in t.frontier:
-        print(state)
-        print(f' [{state.station.name}, {state.station.line}, {state.g}+{state.h}={state.f}]')
-    '''
-    print(t.frontier)
-    print('_'*20)
-    return gen+1
-
+# Usado antes para converter matrizes:
+'''
 # Conversão de distância para tempo,
 # não sei se uso ou não:
 
 # 30km/h => 0,5km/min
 
-'''def dist_to_time(current: int, next_station: int, current_line: str):
-    dist = dist_real[current][next_station]
-    time = 0
+def dist_to_time(dist: float):
     if(dist > 0):
-        if(name_st(next_station) not in lines[current_line]):
-            time += 4
-        time += dist * 0.5
-    return time'''
+        return dist * 0.5
+    return dist
 
+direta = []
+real = []
 
+for i in range(14):
+    d = []
+    r = []
+    for j in range(14):
+        d.append(dist_to_time(dist_direct[i][j]))
+        r.append(dist_to_time(dist_real[i][j]))
+    direta.append(tuple(d))
+    real.append(tuple(r))
+
+print(tuple(direta))
+print(tuple(real))
+'''

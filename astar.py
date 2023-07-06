@@ -1,6 +1,6 @@
 from functions import *
 
-metro = Tree()
+metro = Tree(dist_direct)
 
 # Estações-linha pertencentes à árvore
 metro.addNode('E1', 'azul') # E1az
@@ -25,7 +25,6 @@ metro.addNode('E13', 'vermelho') # E13vm
 metro.addNode('E13', 'verde') # E13vd
 metro.addNode('E14', 'verde') # E14vd
 
-metro.conect = dist_direct
 origin = ''
 dest = ''
 
@@ -36,7 +35,7 @@ while(not(origin in metro.getNames() and dest in metro.getNames())):
     print('\n')
 
 idx_dest = int(dest[1:])-1 # o índice da estação de destino na tabela
-h_og = dist_direct[int(origin[1:])-1][idx_dest] # h(n) da estação de origem
+h_og = metro.conect[int(origin[1:])-1][idx_dest] # h(n) da estação de origem
 
 #   [ usar metro.getStation(origin, 'blank') 
 # v [ ao invés de só declarar o novo node direto?
@@ -44,31 +43,24 @@ s0 = State(Node(origin, 'blank'), 0, h_og, []) # estado inicial
 
 metro.frontier.append(s0) # adicionando à fronteira
 
-count = 1 # contador de emergência [lembrar de tirar na versão final]
-LIMITE = 200 # limite de emergência [lembrar de tirar na versão final]
-print(metro.frontier[0].station.name == dest)
 while(metro.frontier[0].station.name != dest):
-    count = printFrontier(metro, count) # para testes [tirar na versão final]
     # NOVA GERAÇÃO:
     new_gen = [] # lista de estados
     sum_weight = 0 # soma dos pesos total, conhecido como g(n)
     best = metro.frontier[0] # a opção escolhida sempre será a 1a da fronteira
 
-    if(count == LIMITE): break # parada emergencial em caso de loop infinito [tirar na versão final]
-
     for j in range(14): # a ideia é que ele vai verificar todas as conexões da matriz dist_direct
         g_temp = dist_real[best.station.idx][j] # 1) Pega a dist real entre essa e a próxima estação
         if(g_temp > 0): # 1.5) Se for igual a -1, é pq não existe conexão, se for 0 é pq é a mesma estação
             sum_weight = best.g + g_temp # 2) Soma o peso do caminho atual + a nova conexão
-            new_station = getThing(best.station, j, metro) # 3) Pega a nova estação apenas pela
-                                                           # estação atual e o índice da próxima
+            new_station = StationByIdx(best.station, j, metro) # 3) Pega a nova estação apenas pela
+                                                               # estação atual e o índice da próxima
             if(new_station.line != best.station.line): # 4) Adiciona +4min se as
                 sum_weight += 4                        # linhas forem diferentes
             history = best.previous + [best.station.name] # 5) Cria o histórico de estações do novo estado
             # v 6) Cria o novo estado:
-            if(count == 32): print(new_station.name, new_station.line, new_station.idx)
-            new_state = State(new_station, sum_weight, dist_direct[new_station.idx][idx_dest], history)
-            print(new_state) # para testes [tirar na versão final]
+            new_state = State(new_station, sum_weight, metro.conect[new_station.idx][idx_dest], history)
+            '''print(new_state)''' # para testes [tirar na versão final]
             new_gen.append(new_state) # 7) Adiciona o novo estado na lista da nova geração
     
     # ATUALIZAÇÃO FRONTEIRA:
@@ -77,14 +69,10 @@ while(metro.frontier[0].station.name != dest):
     # 2) Ordena a fronteira de menor para maior, baseado na função f(n) de cada estado:
     metro.frontier = quicksort(metro.frontier, 0, len(metro.frontier)-1)
 
-if(count < LIMITE): #(se tiver dado um loop infinito não tem pq botar caminho)
-    # PRINTAR CAMINHO:
-    print('CAMINHO:')
-    for i in range(len(metro.frontier[0].previous)):
-        print(metro.frontier[0].previous[i], ' -> ', end='')
-    print(f'''{metro.frontier[0].station.name}
+# PRINTAR CAMINHO:
+print('CAMINHO:')
+for i in range(len(metro.frontier[0].previous)):
+    print(metro.frontier[0].previous[i], ' -> ', end='')
+print(f'''{metro.frontier[0].station.name}
 
-Tempo total: {metro.frontier[0].f}''')
-else:
-    # Aviso de loop infinito:
-    print('\nloop infinito :(\n')
+Tempo total: {metro.frontier[0].g:.2f}min''')
