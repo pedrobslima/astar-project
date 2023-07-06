@@ -56,7 +56,6 @@ while(metro.frontier[0].station.name != dest):
 
     if(count == LIMITE): break # parada emergencial em caso de loop infinito [tirar na versão final]
 
-    # tá dando erro por aqui ó vvv
     for j in range(14): # a ideia é que ele vai verificar todas as conexões da matriz dist_direct
         g_temp = dist_real[best.station.idx][j] # 1) Pega a dist real entre essa e a próxima estação
         if(g_temp > 0): # 1.5) Se for igual a -1, é pq não existe conexão, se for 0 é pq é a mesma estação
@@ -67,7 +66,7 @@ while(metro.frontier[0].station.name != dest):
                 sum_weight += 4                        # linhas forem diferentes
             history = best.previous + [best.station.name] # 5) Cria o histórico de estações do novo estado
             # v 6) Cria o novo estado:
-            new_state = State(new_station, sum_weight, dist_direct[best.station.idx][idx_dest], history)
+            new_state = State(new_station, sum_weight, dist_direct[new_station.idx][idx_dest], history)
             print(new_state) # para testes [tirar na versão final]
             new_gen.append(new_state) # 7) Adiciona o novo estado na lista da nova geração
     
@@ -75,6 +74,7 @@ while(metro.frontier[0].station.name != dest):
     # 1) Adiciona a nova geração à fronteira:
     metro.frontier = new_gen + metro.frontier[1:]
     # 2) Ordena a fronteira de menor para maior, baseado na função f(n) de cada estado:
+                    #vvvvvvvvv (o problema está aqui)
     metro.frontier = quicksort(metro.frontier, 0, len(metro.frontier)-1)
 
 if(count < LIMITE): #(se tiver dado um loop infinito não tem pq botar caminho)

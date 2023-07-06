@@ -21,32 +21,36 @@ def partition(A: list, l: int, r: int):
     tam = r - l
     if(tam > 0):
         pivo = A[l].f
-        i = l+1
-        j = r
+        i = l
+        j = r+1
 
-        while(j > i):
-            while((A[i].f < pivo) and (i < r)):
+        cond = True
+        while(cond):
+            condi = True
+            condj = True
+            while(condi):
                 i += 1
-            while((A[j].f > pivo) and (j > l)):
+                condi = (A[i].f < pivo) and (i < r)
+            while(condj):
                 j -= 1
+                condj = (A[j].f > pivo) and (j > l)
 
-            temp = A[i]
-            A[i] = A[j]
-            A[j] = temp
+            A[i], A[j] = A[j], A[i]
 
-        temp = A[i]
-        A[i] = A[j]
-        A[j] = temp
+            cond = j > i
 
-        A[l] = A[j]
-        A[j] = pivo
+        A[i], A[j] = A[j], A[i]
+
+        A[l], A[j] = A[j], A[l]
+        
         return j, A
 
 def quicksort(A: list, l: int, r: int):
     if(l < r):
         # s = split position
         s, A = partition(A, l, r)
-        return quicksort(A, l, s-1) + A[s:s+1] + quicksort(A, s+1, r)
+        A = quicksort(A, l, s-1) 
+        A = quicksort(A, s+1, r)
     return A
 
 #----------------------------------------------------
