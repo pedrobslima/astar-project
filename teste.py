@@ -43,7 +43,7 @@ dest = ''
 for o in range(1, 15): # [teste.py]
     for d in range(1, 15): # [teste.py]
         # Para garantir que escolham uma estação dentro do conjunto formado:
-        #while(not(origin in metro.getNames() and dest in metro.getNames())):
+        #while(not(origin in metro.ndNames and dest in metro.ndNames)):
         #    origin = input("Estação de origem: ")
         #    dest = input("Estação de destino: ")
         #    print('\n')
@@ -76,7 +76,7 @@ for o in range(1, 15): # [teste.py]
                                                                        # estação atual e o índice da próxima
                     if(new_station.line != best.station.line): # 4) Adiciona +4min se as
                         sum_weight += 4                        # linhas forem diferentes
-                    history = best.previous + [best.station.name] # 5) Cria o histórico de estações do novo estado
+                    history = best.path + [best.station.name] # 5) Cria o histórico de estações do novo estado
                     # v 6) Cria o novo estado:
                     if(count == 32): print(new_station.name, new_station.line, new_station.idx)
                     new_state = State(new_station, sum_weight, metro.conect[new_station.idx][idx_dest], history)
@@ -92,8 +92,8 @@ for o in range(1, 15): # [teste.py]
         if(count < LIMITE): #(se tiver dado um loop infinito não tem pq botar caminho) [teste.py]
             # PRINTAR CAMINHO:
             print('CAMINHO:')
-            for i in range(len(metro.frontier[0].previous)):
-                print(metro.frontier[0].previous[i], ' -> ', end='')
+            for i in range(len(metro.frontier[0].path)):
+                print(metro.frontier[0].path[i], ' -> ', end='')
             print(f'''{metro.frontier[0].station.name}
 
         Tempo total: {metro.frontier[0].g:.2f}''') # (testes em massa tbm alteram um pouco os valores do tipo float)

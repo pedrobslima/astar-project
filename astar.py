@@ -29,7 +29,7 @@ origin = ''
 dest = ''
 
 # Para garantir que escolham uma estação dentro do conjunto formado:
-while(not(origin in metro.getNames() and dest in metro.getNames())):
+while(not(origin in metro.ndNames and dest in metro.ndNames)):
     origin = input("Estação de origem: ")
     dest = input("Estação de destino: ")
     print('\n')
@@ -42,6 +42,7 @@ h_og = metro.conect[int(origin[1:])-1][idx_dest] # h(n) da estação de origem
 s0 = State(Node(origin, 'blank'), 0, h_og, []) # estado inicial
 
 metro.frontier.append(s0) # adicionando à fronteira
+metro.printFrontier()
 
 while(metro.frontier[0].station.name != dest):
     # NOVA GERAÇÃO:
@@ -57,7 +58,7 @@ while(metro.frontier[0].station.name != dest):
                                                                # estação atual e o índice da próxima
             if(new_station.line != best.station.line): # 4) Adiciona +4min se as
                 sum_weight += 4                        # linhas forem diferentes
-            history = best.previous + [best.station.name] # 5) Cria o histórico de estações do novo estado
+            history = best.path + [best.station.name] # 5) Cria o histórico de estações do novo estado
             # v 6) Cria o novo estado:
             new_state = State(new_station, sum_weight, metro.conect[new_station.idx][idx_dest], history)
             '''print(new_state)''' # para testes [tirar na versão final]
@@ -65,14 +66,15 @@ while(metro.frontier[0].station.name != dest):
     
     # ATUALIZAÇÃO FRONTEIRA:
     # 1) Adiciona a nova geração à fronteira:
-    metro.frontier = new_gen + metro.frontier[1:]
+    metro.updateFrontier(new_gen)
     # 2) Ordena a fronteira de menor para maior, baseado na função f(n) de cada estado:
     metro.frontier = quicksort(metro.frontier, 0, len(metro.frontier)-1)
+    # 2.5) Printar fronteira atual
+    metro.printFrontier()
 
 # PRINTAR CAMINHO:
-print('CAMINHO:')
-for i in range(len(metro.frontier[0].previous)):
-    print(metro.frontier[0].previous[i], ' -> ', end='')
-print(f'''{metro.frontier[0].station.name}
-
-Tempo total: {metro.frontier[0].g:.2f}min''')
+print(f'''\nCAMINHO:\n{'-'*30}
+{metro.frontier[0].arrowPath()}
+{'-'*30}
+Tempo total: {metro.frontier[0].g:.2f}min
+{'-'*30}''')

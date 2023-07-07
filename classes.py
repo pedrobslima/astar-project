@@ -14,8 +14,11 @@ class State:
         self.g = g # 200
         self.h = h # 100
         self.f = g + h # 300
-        self.previous = previous 
+        self.path = previous 
         # ^ lista de estações anteriores (apenas os nomes)
+
+    def arrowPath(self):
+        return ' -> '.join(self.path + [self.station.name])
 
 # Tree representa a árvore completa
 class Tree:
@@ -23,23 +26,33 @@ class Tree:
         self.stations = [] # lista de Nodes
         self.conect = conections # dist_direct
         self.frontier = [] # fronteira atual
+        self.frontGen = 1 # geração atual da fronteira
+        self.ndNames = [] # lista com os nomes das estações
+        self.current_gen = [] # lista com os novos estados (só é usado no print)
     
     # Para adicionar nós à árvore:
     def addNode(self, station_name: str, station_line: str):
         EXbl = Node(station_name, station_line) # EX_blank é só um nome place holder
         self.stations.append(EXbl)              # para o próximo nó a ser adicionado
-    
-    # Para pegar uma lista com apenas os nomes das estações:
-    def getNames(self):
-        temp = []
-        for stt in self.stations:
-            if(stt.name not in temp):
-                temp.append(stt.name)
-        return temp
+        if(station_name not in self.ndNames):
+            self.ndNames.append(station_name)
     
     # Para pegar o objeto nó com esses atributos:
     def getStation(self, name: str, line: str):
         for e in self.stations:
             if(e.name == name and e.line == line):
                 return e
-        #return Node(name, line)
+
+    def updateFrontier(self, generation: list):
+        self.current_gen = generation
+        self.frontier = generation + self.frontier[1:]
+        self.frontGen += 1
+        
+    def printFrontier(self):
+        print(f'--------------------[F{self.frontGen}]--------------------')
+        for state in self.frontier:
+            print(f'[{state.station.name}-{state.station.line}] ', end='')
+            print(f'\tf(n)={state.f:.2f} | h(n)={state.h:.2f} | g(n)={state.g:.2f}', end='')
+            print(f' ||  Path: {state.arrowPath()}', end='')
+            if(state in self.current_gen): print('\t [new!]', end='')
+            print('')
