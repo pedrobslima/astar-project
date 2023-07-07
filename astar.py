@@ -1,5 +1,6 @@
 from functions import *
 
+# Declarando a nossa árvore, o metrô
 metro = Tree(dist_direct)
 
 # Estações-linha pertencentes à árvore
@@ -25,6 +26,7 @@ metro.addNode('E13', 'vermelho') # E13vm
 metro.addNode('E13', 'verde') # E13vd
 metro.addNode('E14', 'verde') # E14vd
 
+#for k in range(2): # (loop para a apresentação em aula)
 origin = ''
 dest = ''
 
@@ -37,12 +39,10 @@ while(not(origin in metro.ndNames and dest in metro.ndNames)):
 idx_dest = int(dest[1:])-1 # o índice da estação de destino na tabela
 h_og = metro.conect[int(origin[1:])-1][idx_dest] # h(n) da estação de origem
 
-#   [ usar metro.getStation(origin, 'blank') 
-# v [ ao invés de só declarar o novo node direto?
 s0 = State(Node(origin, 'blank'), 0, h_og, []) # estado inicial
 
 metro.frontier.append(s0) # adicionando à fronteira
-metro.printFrontier()
+metro.printFrontier() # printando fronteira inicial
 
 while(metro.frontier[0].station.name != dest):
     # NOVA GERAÇÃO:
@@ -61,8 +61,8 @@ while(metro.frontier[0].station.name != dest):
             history = best.path + [best.station.name] # 5) Cria o histórico de estações do novo estado
             # v 6) Cria o novo estado:
             new_state = State(new_station, sum_weight, metro.conect[new_station.idx][idx_dest], history)
-            '''print(new_state)''' # para testes [tirar na versão final]
-            new_gen.append(new_state) # 7) Adiciona o novo estado na lista da nova geração
+            # v 7) Adiciona o novo estado na lista da nova geração
+            new_gen.append(new_state)
     
     # ATUALIZAÇÃO FRONTEIRA:
     # 1) Adiciona a nova geração à fronteira:

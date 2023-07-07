@@ -26,7 +26,7 @@ class Tree:
         self.stations = [] # lista de Nodes
         self.conect = conections # dist_direct
         self.frontier = [] # fronteira atual
-        self.frontGen = 1 # geração atual da fronteira
+        self.frontGen = 1 # número da geração atual da fronteira
         self.ndNames = [] # lista com os nomes das estações
         self.current_gen = [] # lista com os novos estados (só é usado no print)
     
@@ -35,7 +35,7 @@ class Tree:
         EXbl = Node(station_name, station_line) # EX_blank é só um nome place holder
         self.stations.append(EXbl)              # para o próximo nó a ser adicionado
         if(station_name not in self.ndNames):
-            self.ndNames.append(station_name)
+            self.ndNames.append(station_name) # adiciona na lista de nomes
     
     # Para pegar o objeto nó com esses atributos:
     def getStation(self, name: str, line: str):
@@ -43,11 +43,14 @@ class Tree:
             if(e.name == name and e.line == line):
                 return e
 
+    # Para adicionar os novos estados da geração na fronteira
     def updateFrontier(self, generation: list):
         self.current_gen = generation
-        self.frontier = generation + self.frontier[1:]
+        self.frontier = generation + self.frontier[1:] # tbm tira o ex-melhor estado
         self.frontGen += 1
         
+    # Para printar a fronteira de forma organizada
+    # (o output será organizado, mas não essa função hahaha)
     def printFrontier(self):
         print(f'--------------------[F{self.frontGen}]--------------------')
         for state in self.frontier:

@@ -52,11 +52,10 @@ for o in range(1, 15): # [teste.py]
         idx_dest = int(dest[1:])-1 # o índice da estação de destino na tabela
         h_og = metro.conect[int(origin[1:])-1][idx_dest] # h(n) da estação de origem
 
-        #   [ usar metro.getStation(origin, 'blank') 
-        # v [ ao invés de só declarar o novo node direto?
         s0 = State(Node(origin, 'blank'), 0, h_og, []) # estado inicial
 
         metro.frontier.append(s0) # adicionando à fronteira
+        #metro.printFrontier() # printando fronteira inicial
 
         count = 1 # contador de emergência [teste.py]
         print(origin, 'to', dest)
@@ -80,23 +79,24 @@ for o in range(1, 15): # [teste.py]
                     # v 6) Cria o novo estado:
                     if(count == 32): print(new_station.name, new_station.line, new_station.idx)
                     new_state = State(new_station, sum_weight, metro.conect[new_station.idx][idx_dest], history)
-                    '''print(new_state)''' # para testes [tirar na versão final]
-                    new_gen.append(new_state) # 7) Adiciona o novo estado na lista da nova geração
+                    # 7) Adiciona o novo estado na lista da nova geração
+                    new_gen.append(new_state) 
             
             # ATUALIZAÇÃO FRONTEIRA:
             # 1) Adiciona a nova geração à fronteira:
             metro.frontier = new_gen + metro.frontier[1:]
             # 2) Ordena a fronteira de menor para maior, baseado na função f(n) de cada estado:
             metro.frontier = quicksort(metro.frontier, 0, len(metro.frontier)-1)
+            # 2.5) Printar fronteira atual
+            #metro.printFrontier()
 
         if(count < LIMITE): #(se tiver dado um loop infinito não tem pq botar caminho) [teste.py]
             # PRINTAR CAMINHO:
-            print('CAMINHO:')
-            for i in range(len(metro.frontier[0].path)):
-                print(metro.frontier[0].path[i], ' -> ', end='')
-            print(f'''{metro.frontier[0].station.name}
-
-        Tempo total: {metro.frontier[0].g:.2f}''') # (testes em massa tbm alteram um pouco os valores do tipo float)
+            print(f'''\nCAMINHO:\n{'-'*30}
+{metro.frontier[0].arrowPath()}
+{'-'*30}
+Tempo total: {metro.frontier[0].g:.2f}min
+{'-'*30}''') # (testes em massa tbm alteram um pouco os valores do tipo float)
         else:
             # Aviso de loop infinito: [teste.py]
             print('\nloop infinito :(\n')

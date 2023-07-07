@@ -17,7 +17,7 @@ def StationByIdx(nodeA: Node, indexB: int, t: Tree):
             return t.getStation(nameB, color)
 
 # Coisas de quicksort para a ordenação da fronteira:
-#----------------------------------------------------
+
 def partition(A: list, l: int, r: int):
     tam = r - l
     if(tam > 0):
