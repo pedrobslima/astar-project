@@ -40,13 +40,10 @@ metro.addNode('E14', 'verde') # E14vd
 LIMITE = 200 # limite de emergência [teste.py]
 origin = ''
 dest = ''
-for o in range(1, 15): # [teste.py]
-    for d in range(1, 15): # [teste.py]
-        # Para garantir que escolham uma estação dentro do conjunto formado:
-        #while(not(origin in metro.ndNames and dest in metro.ndNames)):
-        #    origin = input("Estação de origem: ")
-        #    dest = input("Estação de destino: ")
-        #    print('\n')
+for o in [1]: # [teste.py]
+    for d in [14, 13, 12, 11]: # [teste.py]
+        
+        metro.resetFrontier()
         origin = 'E' + str(o)
         dest = 'E' + str(d)
         idx_dest = int(dest[1:])-1 # o índice da estação de destino na tabela
@@ -55,7 +52,7 @@ for o in range(1, 15): # [teste.py]
         s0 = State(Node(origin, 'blank'), 0, h_og, []) # estado inicial
 
         metro.frontier.append(s0) # adicionando à fronteira
-        #metro.printFrontier() # printando fronteira inicial
+        metro.printFrontier() # printando fronteira inicial
 
         count = 1 # contador de emergência [teste.py]
         print(origin, 'to', dest)
@@ -84,11 +81,11 @@ for o in range(1, 15): # [teste.py]
             
             # ATUALIZAÇÃO FRONTEIRA:
             # 1) Adiciona a nova geração à fronteira:
-            metro.frontier = new_gen + metro.frontier[1:]
+            metro.updateFrontier(new_gen)
             # 2) Ordena a fronteira de menor para maior, baseado na função f(n) de cada estado:
             metro.frontier = quicksort(metro.frontier, 0, len(metro.frontier)-1)
             # 2.5) Printar fronteira atual
-            #metro.printFrontier()
+            metro.printFrontier()
 
         if(count < LIMITE): #(se tiver dado um loop infinito não tem pq botar caminho) [teste.py]
             # PRINTAR CAMINHO:

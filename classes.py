@@ -59,3 +59,10 @@ class Tree:
             print(f' ||  Path: {state.arrowPath()}', end='')
             if(state in self.current_gen): print('\t [new!]', end='')
             print('')
+
+    # Para resetar a fronteira em casos de testes em massa
+    def resetFrontier(self):
+        self.frontier = []
+        self.frontGen = 1
+        self.ndNames = []
+        self.current_gen = []
