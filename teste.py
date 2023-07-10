@@ -1,20 +1,54 @@
 from functions import *
 
-# teste.py é quase idêntico a astar.py, 
-# só tem alguns detalhes extras que permitem 
-# vários testes seguidos do algoritmo A*
+# ESTE ARQUIVO É APENAS PARA TESTE RÁPIDO, PULE PARA A LINHA 74
 
-# Além disso, por algum motivo ele dá erro
-# quando são feitas MUITAS buscas, mais
-# especificamente na parte da recursão do
-# quicksort (localizado em functions.py;
-# não só isso mas o caminho printado começa
-# a faltar algumas das paradas, provavelmente
-# é algum problema de otimização.
+def astar(t: Tree, origin: str, destination: str):
+    idx_dest = int(destination[1:])-1 # o índice da estação de destino na tabela
+    h_og = t.conect[int(origin[1:])-1][idx_dest] # h(n) da estação de origem
+
+    s0 = State(Node(origin, 'blank'), 0, h_og, []) # estado inicial
+
+    t.frontier.append(s0) # adicionando à fronteira
+    t.printFrontier() # printando fronteira inicial
+
+    while(t.frontier[0].station.name != destination):
+        # NOVA GERAÇÃO:
+        new_gen = [] # lista de estados
+        sum_weight = 0 # soma dos pesos total, conhecido como g(n)
+        best = t.frontier[0] # a opção escolhida sempre será a 1a da fronteira
+
+        for j in range(14): # a ideia é que ele vai verificar todas as conexões da matriz dist_direct
+            g_temp = dist_real[best.station.idx][j] # 1) Pega a dist real entre essa e a próxima estação
+            if(g_temp > 0): # 1.5) Se for igual a -1, é pq não existe conexão, se for 0 é pq é a mesma estação
+                sum_weight = best.g + g_temp # 2) Soma o peso do caminho atual + a nova conexão
+                new_station = StationByIdx(best.station, j, t) # 3) Pega a nova estação apenas pela
+                                                                # estação atual e o índice da próxima
+                if(new_station.line != best.station.line): # 4) Adiciona +4min se as
+                    sum_weight += 4                        # linhas forem diferentes
+                history = best.path + [best.station.name] # 5) Cria o histórico de estações do novo estado
+                # v 6) Cria o novo estado:
+                new_state = State(new_station, sum_weight, t.conect[new_station.idx][idx_dest], history)
+                # v 7) Adiciona o novo estado na lista da nova geração
+                new_gen.append(new_state)
+        
+        # ATUALIZAÇÃO FRONTEIRA:
+        # 1) Adiciona a nova geração à fronteira:
+        t.updateFrontier(new_gen)
+        # 2) Ordena a fronteira de menor para maior, baseado na função f(n) de cada estado:
+        t.frontier = quicksort(t.frontier, 0, len(t.frontier)-1)
+        # 2.5) Printar fronteira atual
+        t.printFrontier()
+
+    # PRINTAR CAMINHO:
+    print(f'''\nCAMINHO:\n{'-'*30}
+{t.frontier[0].arrowPath()}
+{'-'*30}
+Tempo total: {t.frontier[0].g:.2f}min
+{'-'*30}''')
+    # RESETA FRONTEIRA:
+    t.resetFrontier()
 
 metro = Tree(dist_direct)
-
-# Estações-linha pertencentes à árvore
 metro.addNode('E1', 'azul') # E1az
 metro.addNode('E2', 'azul') # E2az
 metro.addNode('E2', 'amarelo') # E2am
@@ -37,63 +71,14 @@ metro.addNode('E13', 'vermelho') # E13vm
 metro.addNode('E13', 'verde') # E13vd
 metro.addNode('E14', 'verde') # E14vd
 
-LIMITE = 200 # limite de emergência [teste.py]
-origin = ''
-dest = ''
-for o in [1]: # [teste.py]
-    for d in [14, 13, 12, 11]: # [teste.py]
-        
-        metro.resetFrontier()
-        origin = 'E' + str(o)
-        dest = 'E' + str(d)
-        idx_dest = int(dest[1:])-1 # o índice da estação de destino na tabela
-        h_og = metro.conect[int(origin[1:])-1][idx_dest] # h(n) da estação de origem
+# COMEÇA AQUI ----------------------------------------------------------------------
 
-        s0 = State(Node(origin, 'blank'), 0, h_og, []) # estado inicial
+orgn = [1, 2, 3, 4, 5] # coloque as origens
+dest = [13, 14, 11, 12, 10] # e seus respectivos destinos
 
-        metro.frontier.append(s0) # adicionando à fronteira
-        metro.printFrontier() # printando fronteira inicial
-
-        count = 1 # contador de emergência [teste.py]
-        print(origin, 'to', dest)
-        while(metro.frontier[0].station.name != dest):
-            # NOVA GERAÇÃO:
-            new_gen = [] # lista de estados
-            sum_weight = 0 # soma dos pesos total, conhecido como g(n)
-            best = metro.frontier[0] # a opção escolhida sempre será a 1a da fronteira
-
-            if(count == LIMITE): break # parada emergencial em caso de loop infinito [tirar na versão final]
-
-            for j in range(14): # a ideia é que ele vai verificar todas as conexões da matriz dist_direct
-                g_temp = dist_real[best.station.idx][j] # 1) Pega a dist real entre essa e a próxima estação
-                if(g_temp > 0): # 1.5) Se for igual a -1, é pq não existe conexão, se for 0 é pq é a mesma estação
-                    sum_weight = best.g + g_temp # 2) Soma o peso do caminho atual + a nova conexão
-                    new_station = StationByIdx(best.station, j, metro) # 3) Pega a nova estação apenas pela
-                                                                       # estação atual e o índice da próxima
-                    if(new_station.line != best.station.line): # 4) Adiciona +4min se as
-                        sum_weight += 4                        # linhas forem diferentes
-                    history = best.path + [best.station.name] # 5) Cria o histórico de estações do novo estado
-                    # v 6) Cria o novo estado:
-                    if(count == 32): print(new_station.name, new_station.line, new_station.idx)
-                    new_state = State(new_station, sum_weight, metro.conect[new_station.idx][idx_dest], history)
-                    # 7) Adiciona o novo estado na lista da nova geração
-                    new_gen.append(new_state) 
-            
-            # ATUALIZAÇÃO FRONTEIRA:
-            # 1) Adiciona a nova geração à fronteira:
-            metro.updateFrontier(new_gen)
-            # 2) Ordena a fronteira de menor para maior, baseado na função f(n) de cada estado:
-            metro.frontier = quicksort(metro.frontier, 0, len(metro.frontier)-1)
-            # 2.5) Printar fronteira atual
-            metro.printFrontier()
-
-        if(count < LIMITE): #(se tiver dado um loop infinito não tem pq botar caminho) [teste.py]
-            # PRINTAR CAMINHO:
-            print(f'''\nCAMINHO:\n{'-'*30}
-{metro.frontier[0].arrowPath()}
-{'-'*30}
-Tempo total: {metro.frontier[0].g:.2f}min
-{'-'*30}''') # (testes em massa tbm alteram um pouco os valores do tipo float)
-        else:
-            # Aviso de loop infinito: [teste.py]
-            print('\nloop infinito :(\n')
+for i in range(len(orgn)):
+    if(i < len(dest)):
+        a = 'E' + str(orgn[i])
+        b = 'E' + str(dest[i])
+        astar(metro, a, b)
+    input("[Enter] para continuar")

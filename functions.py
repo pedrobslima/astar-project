@@ -1,6 +1,5 @@
 from dicts import *
 from classes import *
-from math import floor
 
 # Para pegar a linha específica da estação seguinte:
 #(é usado para saber se vai precisar trocar de linha ou não)

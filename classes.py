@@ -64,5 +64,4 @@ class Tree:
     def resetFrontier(self):
         self.frontier = []
         self.frontGen = 1
-        self.ndNames = []
         self.current_gen = []
