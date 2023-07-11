@@ -17,8 +17,8 @@ def astar(t: Tree, origin: str, destination: str):
         sum_weight = 0 # soma dos pesos total, conhecido como g(n)
         best = t.frontier[0] # a opção escolhida sempre será a 1a da fronteira
 
-        for j in range(14): # a ideia é que ele vai verificar todas as conexões da matriz dist_direct
-            g_temp = dist_real[best.station.idx][j] # 1) Pega a dist real entre essa e a próxima estação
+        for j in range(14): # a ideia é que ele vai verificar todas as conexões da matriz dist_real
+            g_temp = t.real_conect[best.station.idx][j] # 1) Pega a dist real entre essa e a próxima estação
             if(g_temp > 0): # 1.5) Se for igual a -1, é pq não existe conexão, se for 0 é pq é a mesma estação
                 sum_weight = best.g + g_temp # 2) Soma o peso do caminho atual + a nova conexão
                 new_station = StationByIdx(best.station, j, t) # 3) Pega a nova estação apenas pela
@@ -48,7 +48,7 @@ Tempo total: {t.frontier[0].g:.2f}min
     # RESETA FRONTEIRA:
     t.resetFrontier()
 
-metro = Tree(dist_direct)
+metro = Tree(dist_real, dist_direct)
 metro.addNode('E1', 'azul') # E1az
 metro.addNode('E2', 'azul') # E2az
 metro.addNode('E2', 'amarelo') # E2am

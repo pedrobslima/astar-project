@@ -22,9 +22,10 @@ class State:
 
 # Tree representa a árvore completa
 class Tree:
-    def __init__(self, conections: tuple):
+    def __init__(self, real_conections: tuple, direct_conections: tuple):
         self.stations = [] # lista de Nodes
-        self.conect = conections # dist_direct
+        self.real_conect = real_conections # dist_real
+        self.conect = direct_conections # dist_direct
         self.frontier = [] # fronteira atual
         self.frontGen = 1 # número da geração atual da fronteira
         self.ndNames = [] # lista com os nomes das estações
