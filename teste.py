@@ -73,8 +73,8 @@ metro.addNode('E14', 'verde') # E14vd
 
 # COMEÇA AQUI ----------------------------------------------------------------------
 
-orgn = [1, 2, 3, 4, 5] # coloque as origens
-dest = [13, 14, 11, 12, 10] # e seus respectivos destinos
+orgn = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] # coloque as origens
+dest = [13, 14, 11, 12, 10, 9, 8, 7, 5, 4, 3, 2, 1] # e seus respectivos destinos
 
 for i in range(len(orgn)):
     if(i < len(dest)):

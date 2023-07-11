@@ -72,7 +72,7 @@ metro.addNode('E13', 'vermelho') # E13vm
 metro.addNode('E13', 'verde') # E13vd
 metro.addNode('E14', 'verde') # E14vd
 
-for i in range(2):
+for i in range(10):
     orgn = ''
     dest = ''
     # Para garantir que escolham uma estação dentro do conjunto formado:
